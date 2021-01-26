@@ -11,7 +11,7 @@
     "prod:ci": "npm run populate && npm run prod ",
     "build": "rm -rf dist && tsc --module commonjs",
     "test:dev": "npm run build && npm run populate && npm run test",
-    "test": "mocha --timeout 15000 dist/tests/integration/buyers.test.js --exit",
+    "test": "mocha --timeout 15000 dist/tests/integration/producers.test.js --exit",
     "lint": "eslint 'src/**'",
     "lint:security": "eslint --no-eslintrc -c .eslint-security.json 'src/**'",
     "lint-fix": "eslint --fix 'src/**'",

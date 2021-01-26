@@ -80,7 +80,7 @@ const addEdges = async () => Promise.all([
   await openCollection('reviews', CollectionType.EDGE_COLLECTION),
   await openCollection('ordered_by', CollectionType.EDGE_COLLECTION),
   await openCollection('produced_by', CollectionType.EDGE_COLLECTION),
-  await openCollection('orderProduct', CollectionType.EDGE_COLLECTION),
+  await openCollection('ordered_product', CollectionType.EDGE_COLLECTION),
 ]);
 
 const createIndex = async (colName: string, index: any): Promise<any> => {
@@ -230,6 +230,7 @@ const removeByExample = async (colName: string, attr: string, val: string): Prom
   }
 };
 
+// Get Documents connected from {colName} edge collection to {to} document collections
 const inEdges = async (colName: string, to: string): Promise<any> => {
   try {
     const cursor = await query(`
@@ -243,7 +244,7 @@ const inEdges = async (colName: string, to: string): Promise<any> => {
     console.error(`Unable to execute inEdges in collection ${colName}. Error: ${error.message}`); // eslint-disable-line
   }
 };
-
+// Get Documents connected to {colName} edge collection from {from} document collections
 const outEdges = async (colName: string, from: string): Promise<any> => {
   try {
     const cursor = await query(`
@@ -251,6 +252,7 @@ const outEdges = async (colName: string, from: string): Promise<any> => {
       OUTBOUND '${from}' ${colName}
       RETURN v
     `);
+    
 
     return await cursor.all();
   } catch (error) {

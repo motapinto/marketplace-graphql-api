@@ -6,135 +6,126 @@ import server from './lazyServer';
 describe('Reviews integration tests', async () => {
   const { query, mutate } = await server.value;
   const dbName = 'reviews_test';
+  const returnArgs = `
+    _key
+    buyerKey
+    productKey
+    title
+    comment
+    rating
+    date
+  `
 
   before(async () => {
     await populate(dbName);
-  });
-
-  it('should get a review', async () => {
-    const GET_REVIEW = gql`
-      query {
-        review(_key: "401") {
-          _key
-          title        
-        }
-      }
-    `;
-
-    const res = await query({ query: GET_REVIEW });
-    expect(res.data.review).to.eql({ _key: '401', title: 'Could be worse' });
   });
 
   it('should get all reviews', async () => {
     const GET_REVIEWS = gql`
       query {
         reviews {
-          _key
-          buyerKey
-          productKey
-          title
-          comment
-          rating
-          date
+          ${returnArgs}    
         }
       }
     `;
 
     const res = await query({ query: GET_REVIEWS });
-    expect(res.data.reviews).to.have.length(9);
+    expect(res.data.reviews).to.have.length(11);
+  });
+
+  it('should get a review', async () => {
+    const GET_REVIEW = gql`
+      query {
+        review(key: "1") {
+          ${returnArgs}     
+        }
+      }
+    `;
+
+    const res = await query({ query: GET_REVIEW });
+    expect(res.data.review.title).to.eql('Please stay away');
   });
 
   it('should get a product\'s reviews', async () => {
     const GET_REVIEWS = gql`
       query {
-        product(_key: "111") {
+        product(key: "111") {
           reviews {
-            _key,
-            buyerKey,
-            productKey,
-            title,
-            comment,
-            rating,
-      
+            ${returnArgs}    
           }        
         }
       }
     `;
 
     const res = await query({ query: GET_REVIEWS });
-    expect(res.data.product.reviews).to.have.length(3);
+    expect(res.data.product.reviews).to.have.length(2);
   });
 
   it('should get a buyer\'s review', async () => {
     const GET_REVIEWS = gql`
       query {
-        buyer(key: "123") {
+        buyer(key: "1") {
           reviews {
-            _key
-            title
+            ${returnArgs}    
           }        
         }
       }
     `;
 
     const res = await query({ query: GET_REVIEWS });
-    expect(res.data.buyer.reviews).to.have.length(9);
+    expect(res.data.buyer.reviews).to.have.length(6);
   });
 
-  it('should add a review to a product', async () => {
+  it('should add a review', async () => {
     const ADD_REVIEW = gql`
       mutation {
         addReview(
           review: {
-            _key: "649316"
-            buyerKey: "111"
+            buyerKey: "1"
             productKey: "111"
             title: "Something"
-            comment: "asd"
+            comment: "else return it"
             rating: 5
-            date: "12/4/2020, 9:00:15 PM"
           }
         ) {
-          _key
-          title
+          ${returnArgs}    
         }
       }
     `;
 
     const res = await mutate({ mutation: ADD_REVIEW });
-    expect(res.data.addReview).to.eql({ _key: '649316', title: 'Something' });
+    expect(res.data.addReview.title).to.eql('Something');
   });
 
-  it('should update a review from a product', async () => {
+  it('should update a review', async () => {
     const UPDATE_REVIEW = gql`
       mutation {
         updateReview(
           review: {
-            _key: "649316"
-            title: "Something else"
+            _key: "1"
+            title: "Run from this"
           }
         ) {
-          title
+          ${returnArgs}    
         }
       }
     `;
 
     const res = await mutate({ mutation: UPDATE_REVIEW });
-    expect(res.data.updateReview).to.eql({ title: 'Something else' });
+    expect(res.data.updateReview.title).to.eql('Run from this');
   });
 
-  it('should remove a review from a product', async () => {
+  it('should remove a review', async () => {
     const REMOVE_REVIEW = gql`
       mutation {
-        removeReview(_key: "649316") {
-          _key
-          title
+        removeReview(key: "1") {
+          ${returnArgs}    
         }
       }
     `;
 
     const res = await mutate({ mutation: REMOVE_REVIEW });
-    expect(res.data.removeReview).to.eql({ _key: '649316', title: 'Something else' });
+    expect(res.data.removeReview.title).to.eql('Run from this');
   });
 
   after(async () => {

@@ -7,6 +7,7 @@ describe('Buyers integration tests', async () => {
   const { query, mutate } = await server.value;
   const dbName = 'buyers_test';
   const returnArgs = `
+    _key
     name
     phone
     email
@@ -33,6 +34,9 @@ describe('Buyers integration tests', async () => {
       comment
       rating
       date
+    }
+    categories {
+      name
     }
   `;
 
@@ -64,6 +68,7 @@ describe('Buyers integration tests', async () => {
 
     const res = await query({ query: GET_BUYER });
     expect(res.data.buyer.name).to.eql('Martim Pinto da Silva');
+    expect(res.data.buyer.categories).to.eql([{ name: 'honey'}, { name: 'cookies' }]);
   });
 
   it('should add a buyers', async () => {

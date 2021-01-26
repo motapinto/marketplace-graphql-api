@@ -26,5 +26,5 @@ export default class ReviewType {
   rating: number;
 
   @field()
-  date: Date;
+  date: string;
 }

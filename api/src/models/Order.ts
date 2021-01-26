@@ -14,7 +14,7 @@ const add = async (orderInput: OrderInput, key: string = null) => {
   if (key) Object.assign(order, { _key: key });
   const orderModel = await db.createDocument('orders', order);
   await db.createDocument('ordered_by', { _key: `ordered_by-${orderModel._key}-${orderInput.buyerKey}`, _from: `orders/${orderModel._key}`, _to: `buyer/${orderInput.buyerKey}` });
-  await db.createDocument('orderProduct', { _key: `orderProduct-${orderModel._key}-${orderInput.buyerKey}`, _from: `orders/${orderModel._key}`, _to: `products/${orderInput.productKey}` });
+  await db.createDocument('ordered_product', { _key: `ordered_product-${orderModel._key}-${orderInput.buyerKey}`, _from: `orders/${orderModel._key}`, _to: `products/${orderInput.productKey}` });
 };
 
 const getFromBuyer = async (id: string) => {
@@ -28,7 +28,7 @@ const getFromBuyer = async (id: string) => {
 
 const getProduct = async (id: string) => {
   const cursor = await db.query(`
-        FOR product IN 1..1 OUTBOUND "orders/${id}" orderProduct
+        FOR product IN 1..1 OUTBOUND "orders/${id}" ordered_product
         LIMIT 1
         RETURN product
     `);
@@ -38,7 +38,7 @@ const getProduct = async (id: string) => {
 
 const getProducts = async (id: string) => {
   const cursor = await db.query(`
-        FOR product IN 1..1 OUTBOUND "orders/${id}" orderProduct
+        FOR product IN 1..1 OUTBOUND "orders/${id}" ordered_product
         RETURN product
     `);
 

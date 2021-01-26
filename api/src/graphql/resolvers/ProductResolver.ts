@@ -42,29 +42,29 @@ export default class ProductResolver {
     return (ratingsSum / reviews.length).toFixed(1);
   }
 
-  @query(() => ProductType)
-  async product(@arg('_key') key: string) {
-    return Product.get(key);
-  }
-
-  @query(() => [ProductType])
+  @query(() => [ProductType], { defaultValue: [] })
   async products(@args() {
     query, categories, priceMin, priceMax, sort,
   } : SearchProductArgs) {
     return Product.getAll(query, categories, priceMin, priceMax, sort);
   }
 
-  @mutation(() => ProductType)
+  @query(() => ProductType, { nullable: true })
+  async product(@arg('key') key: string) {
+    return Product.get(key);
+  }
+
+  @mutation(() => ProductType, { nullable: true })
   async addProduct(@arg('product') product: AddProductInput) {
     return Product.add(product);
   }
 
-  @mutation(() => ProductType, { defaultValue: [] })
-  async removeProduct(@arg('_key') key: string) {
+  @mutation(() => ProductType, { nullable: true })
+  async removeProduct(@arg('key') key: string) {
     return Product.remove(key);
   }
 
-  @mutation(() => ProductType)
+  @mutation(() => ProductType, { nullable: true })
   async updateProduct(@arg('product') product: UpdateProductInput) {
     return Product.update(product);
   }

@@ -16,25 +16,25 @@ import { AddProducerInput, UpdateProducerInput } from '../inputs/ProducerInput';
 export default class ProducerResolver extends UserResolver {
   @fieldResolver()
   async products(@root() producer: ProducerType) {
-    return Producer.getProducts(producer);
+    return Producer.getProducts(producer._key);
   }
 
-  @query(() => [ProducerType], { nullable: true })
+  @query(() => [ProducerType], { defaultValue: [] })
   async producers() {
     return Producer.getAll();
   }
 
-  @query(() => [ProducerType])
+  @query(() => ProducerType, { nullable: true })
   async producer(@arg('key') key: string) {
     return Producer.get(key);
   }
 
-  @mutation(() => ProducerType, { defaultValue: [] })
+  @mutation(() => ProducerType, { nullable: true })
   async addProducer(@arg('producer') producer: AddProducerInput) {
     return Producer.add(producer);
   }
 
-  @mutation(() => ProducerType, { defaultValue: [] })
+  @mutation(() => ProducerType, { nullable: true })
   async removeProducer(@arg('key') key: string) {
     return Producer.remove(key);
   }

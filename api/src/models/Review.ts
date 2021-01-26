@@ -4,7 +4,9 @@ import ReviewType from '../graphql/types/ReviewType';
 import { AddReviewInput, UpdateReviewInput } from '../graphql/inputs/ReviewInput';
 
 interface ArangoReview {
+  _id: string
   _key: string
+  _rev: string
   _from: string
   _to: string
   title: string
@@ -13,24 +15,23 @@ interface ArangoReview {
   date: string
 }
 
-const parseArangoReview = (val: ArangoReview) : ReviewType => ({
-  _key: val._key,
-  buyerKey: val._from.substring('buyer/'.length),
-  productKey: val._to.substring('product/'.length),
-  title: val.title,
-  comment: val.comment,
-  rating: val.rating,
-  date: new Date(Date.parse(val.date)),
-});
+const parseArangoReview = (val: ArangoReview) : ReviewType => {  
+  const { _rev, _id, _from, _to, ...data} = val;
 
-const parseApolloReview = (val: AddReviewInput) : Partial<ArangoReview> => ({
-  _from: `buyer/${val.buyerKey}`,
-  _to: `product/${val.productKey}`,
-  title: val.title,
-  comment: val.comment,
-  rating: val.rating,
-  date: new Date().toLocaleString(),
-});
+  return Object.assign(data, {
+    buyerKey: val._from.substring('buyers/'.length), 
+    productKey: val._to.substring('products/'.length), 
+  });
+};
+
+const parseApolloReview = (val: AddReviewInput) : Partial<ArangoReview> => {
+  const { buyerKey, productKey, ...data} = val;
+
+  return Object.assign(data, {
+    _from: `buyers/${val.buyerKey}`, 
+    _to: `products/${val.productKey}`, 
+    date: new Date().toLocaleString()});
+};
 
 const getAll = async () => {
   const cursor = await database.query(`
@@ -54,7 +55,7 @@ const get = async (key: string) => {
 const getFromBuyer = async (key: string) => {
   const cursor = await database.query(`
     FOR r IN reviews
-    FILTER r._from == "buyer/${key}"
+    FILTER r._from == "buyers/${key}"
     RETURN r
   `);
 
@@ -64,7 +65,7 @@ const getFromBuyer = async (key: string) => {
 const getFromProduct = async (key: string) => {
   const cursor = await database.query(`
     FOR r IN reviews
-    FILTER r._to == "product/${key}"
+    FILTER r._to == "products/${key}"
     RETURN r
   `);
 

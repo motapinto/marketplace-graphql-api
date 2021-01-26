@@ -34,7 +34,6 @@ const add = async (newProducer: AddProducerInput) : Promise<ProducerType> => {
     photo: newProducer.photo,
     banner: newProducer.banner,
     description: newProducer.description,
-    products: [],
     location: newProducer.location,
   }), { returnNew: true });
 
@@ -43,7 +42,7 @@ const add = async (newProducer: AddProducerInput) : Promise<ProducerType> => {
 
 const remove = async (key: string): Promise<ProducerType> => {
   // Remove edges(producer->product) linked to producer
-  const products = await db.outEdges(`producers/${key}`, 'products');
+  const products = await getProducts(key);
   products.forEach((product: ProductType) => {
     Product.remove(product._key);
   });
@@ -58,8 +57,8 @@ const update = async (updatedProducer: UpdateProducerInput): Promise<ProducerTyp
   return updatedDoc.new;
 };
 
-const getProducts = async (producer: ProducerType)
-: Promise<Array<ProductType>> => db.outEdges(`producers/${producer._key}`, 'products');
+const getProducts = async (producerKey: string)
+: Promise<Array<ProductType>> => db.outEdges('produced_by', `producers/${producerKey}`);
 
 export = {
   getAll,

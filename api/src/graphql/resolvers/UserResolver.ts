@@ -9,7 +9,7 @@ import UserUnion from '../unions/UserUnion';
 
 @resolver()
 export default class UserResolver {
-  @query(() => [UserUnion], { nullable: true })
+  @query(() => [UserUnion], { defaultValue: [] })
   async users(): Promise<Array<typeof UserUnion>> {
     const buyers = await Buyer.getAll();
     const producers = await Producer.getAll();

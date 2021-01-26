@@ -6,6 +6,36 @@ import server from './lazyServer';
 describe('Producers integration tests', async () => {
   const { query, mutate } = await server.value;
   const dbName = 'producers_test';
+  const returnArgs = `
+    _key
+    name
+    description
+    location {
+      latitude
+      longitude
+    }
+    banner {
+      dataLocation
+    }
+    photo {
+      dataLocation
+    }
+    products {
+      _key
+      name
+      description
+      price
+      stock
+      images {
+        dataLocation
+      }
+      reviews {
+        comment
+        rating
+        date
+      }
+    }
+  `;
 
   before(async () => {
     await populate(dbName);
@@ -14,92 +44,84 @@ describe('Producers integration tests', async () => {
   it('should get all producers', async () => {
     const GET_PRODUCERS = gql`
       query {
-        getProducers {
-          name
-          description
+        producers {
+          ${returnArgs}
         }
       }
     `;
 
     const res = await query({ query: GET_PRODUCERS });
-    expect(res.data.getProducers).to.eql([
-      {
-        name: 'SouthernJams',
-        description: 'We are a couple living in Cork, trying to help make the world a more sustainable place. We sell the fruits we grow in our home, both in their natural forms and as delicious homemade jam. We hope you enjoy our products!',
-      },
-      { name: 'Jorge Saraiva', description: null },
-      { name: 'Sara Santos', description: null },
-    ]);
+    expect(res.data.producers.length).to.eql(3);
   });
 
-  it('should get a specific producer', async () => {
+  it('should get a producer', async () => {
     const GET_PRODUCER = gql`
       query {
-        getProducer(key: "80") {
-          name
+        producer(key: "1") {
+          ${returnArgs}
         }
       }
     `;
 
-    const res = await query({ query: GET_PRODUCER });
-    expect(res.data.getProducer).to.eql(
-      [{ name: 'Jorge Saraiva' }],
-    );
+    const res = await query({ query: GET_PRODUCER });    
+    expect(res.data.producer.name).to.eql('Sophie Austin');
+    expect(res.data.producer.products.length).to.eql(3);
   });
 
   it('should add a producer', async () => {
     const ADD_PRODUCER = gql`
       mutation {
-        addProducer(producer: {
-          _key: "1234",
-          name: "Jonas Brothers",
-          description: "We make music. That's it. Nothing to see here.",
-        }) {
-          name
-          description
+        addProducer(
+          producer: {
+            name: "Test Producer"
+            description: "Test description"
+            phone: "+351919191910"
+            photo: { dataLocation: "stock" }
+            banner: { dataLocation: "stock" }
+            email: "test@example.com"
+            birthday: "01-01-1999"
+            address: "Rua Exemplo, nº 1001"
+            location: { latitude: 53.347229, longitude: -6.266593 }
+          }
+        ) {
+          ${returnArgs}
         }
       }
     `;
 
     const res = await mutate({ mutation: ADD_PRODUCER });
-    expect(res.data.addProducer).to.eql({ name: 'Jonas Brothers', description: "We make music. That's it. Nothing to see here." });
-  });
-
-  it('should edit a producer', async () => {
-    const EDIT_USER = gql`
-      mutation {
-        editProducer(producer: {
-          _key: "12312313461",
-          description: "We are a couple living in Cork, trying to help make the world a more sustainable place. We sell the fruits we grow in our home, both in their natural forms and as delicious homemade jam. We hope you enjoy our products!",
-          products: [],
-          name: "Banana Splits",
-          location: {
-            latitude: 53.456785,
-            longitude: -6.341236
-          }
-        }) {
-          _key
-          name
-        }
-      }
-    `;
-
-    const res = await mutate({ mutation: EDIT_USER });
-    expect(res.data.editProducer).to.eql({ _key: '12312313461', name: 'Banana Splits' });
+    expect(res.data.addProducer.name).to.eql('Test Producer');
   });
 
   it('should delete a producer', async () => {
-    const DELETE_PRODUCER = gql`
+    const REMOVE_PRODUCER = gql`
       mutation {
-        removeProducer(key: "12312313461") {
-          _key
-          name
+        removeProducer(key: "1") {
+          ${returnArgs}
         }
       }
     `;
 
-    const res = await mutate({ mutation: DELETE_PRODUCER });
-    expect(res.data.removeProducer).to.eql({ _key: '12312313461', name: 'Banana Splits' });
+    const res = await mutate({ mutation: REMOVE_PRODUCER });
+    expect(res.data.removeProducer.name).to.eql('Sophie Austin');
+  });
+
+  it('should update a producer', async () => {
+    const UPDATE_USER = gql`
+      mutation {
+        updateProducer(
+          producer: {
+            _key: "3"
+            name: "Arlo Jameson"
+          }
+        ) {
+          ${returnArgs}
+        }
+      }
+    `;
+
+    const res = await mutate({ mutation: UPDATE_USER });
+    expect(res.data.updateProducer.name).to.eql('Arlo Jameson');
   });
 
   after(async () => {

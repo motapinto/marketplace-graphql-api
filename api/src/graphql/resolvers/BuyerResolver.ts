@@ -32,22 +32,22 @@ export default class BuyerResolver extends UserResolver {
     return Order.getFromBuyer(buyer._key);
   }
 
-  @query(() => [BuyerType], { nullable: true })
+  @query(() => [BuyerType], { defaultValue: [] })
   async buyers() {
     return Buyer.getAll();
   }
 
-  @query(() => BuyerType)
+  @query(() => BuyerType, { nullable: true })
   async buyer(@arg('key') key: string) {
     return Buyer.get(key);
   }
 
-  @mutation(() => BuyerType, { defaultValue: [] })
+  @mutation(() => BuyerType, { nullable: true })
   async addBuyer(@arg('buyer') buyer: AddBuyerInput) {
     return Buyer.add(buyer);
   }
 
-  @mutation(() => BuyerType, { defaultValue: [] })
+  @mutation(() => BuyerType, { nullable: true })
   async removeBuyer(@arg('key') key: string) {
     return Buyer.remove(key);
   }

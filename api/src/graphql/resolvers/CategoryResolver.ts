@@ -11,30 +11,28 @@ import { AddCategoryInput, UpdateCategoryInput } from '../inputs/CategoryInput';
 
 @resolver(() => CategoryType)
 export default class CategoryResolver {
-  constructor(private readonly categoryModel = Category) {}
-
-  @query(() => CategoryType)
-  async category(@arg('_key') key: string) {
-    return this.categoryModel.get(key);
-  }
-
-  @query(() => [CategoryType])
+  @query(() => [CategoryType], { defaultValue: [] })
   async categories() {
-    return this.categoryModel.getAll();
+    return Category.getAll();
   }
 
-  @mutation(() => CategoryType)
+  @query(() => CategoryType, { nullable: true })
+  async category(@arg('key') key: string) {
+    return Category.get(key);
+  }
+
+  @mutation(() => CategoryType, { nullable: true })
   async addCategory(@arg('category') category: AddCategoryInput) {
-    return this.categoryModel.add(category);
+    return Category.add(category);
   }
 
-  @mutation(() => CategoryType)
-  async removeCategory(@arg('_key') key: string) {
-    return this.categoryModel.remove(key);
+  @mutation(() => CategoryType, { nullable: true })
+  async removeCategory(@arg('key') key: string) {
+    return Category.remove(key);
   }
 
-  @mutation(() => CategoryType)
+  @mutation(() => CategoryType, { nullable: true })
   async updateCategory(@arg('category') category: UpdateCategoryInput) {
-    return this.categoryModel.update(category);
+    return Category.update(category);
   }
 }
