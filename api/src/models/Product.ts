@@ -5,29 +5,32 @@ import ProductType from '../graphql/types/ProductType';
 import Category from './Category';
 
 const getSortQuery = (sort: Sort, search: string = undefined) => {
-  let query = search ? 'SORT BM25(p) DESC, ' : 'SORT ';
-  const descendingRating = 'product.rating DESC';
+  let query = search ? 'SORT BM25(product) DESC, ' : 'SORT ';
 
   switch (sort) {
-    case Sort.RATING:
-    case Sort.MOST_POPULAR:
-    case Sort.RECOMENDED:
-    case Sort.SUSTAINABILITY:
-      query += descendingRating;
+    case Sort.MOST_RECENT:
+      query += 'product.publishedAt DESC';
       return query;
 
     case Sort.PRICE_HIGH_LOW:
       query += 'product.price DESC';
       return query;
 
-    case Sort.MOST_RECENT:
-      query += 'product.publishedAt ASC';
-      return query;
-
-    case Sort.PRICE_LOW_HIGH:
-    default:
+    case Sort.PRICE_LOW_HIGH: default:
       query += 'product.price ASC';
       return query;
+    
+    case Sort.RATING:
+      const productsRating = `
+        LET rating = AVERAGE(
+          FOR review IN reviews
+          FILTER review._to == product._id
+          RETURN review.rating
+        )
+      `;
+      
+      query += 'rating DESC';
+      return productsRating + query;
   }
 };
 
@@ -39,7 +42,7 @@ const filterQuery = (categories: string[], priceMin: number, priceMax: number) =
     query = `
       LET categories = (
         FOR v IN 1..1 
-        OUTBOUND p._id products_categories
+        OUTBOUND product._id products_categories
         RETURN v.name
       )
     `;
@@ -52,14 +55,14 @@ const filterQuery = (categories: string[], priceMin: number, priceMax: number) =
   }
 
   if (priceMin !== undefined && priceMax !== undefined) {
-    if (categories && categories.length !== 0) query += ` && p.price >= ${priceMin} && p.price <= ${priceMax}`;
-    else query = `FILTER p.price >= ${priceMin} && p.price <= ${priceMax}`;
+    if (categories && categories.length !== 0) query += ` && product.price >= ${priceMin} && product.price <= ${priceMax}`;
+    else query = `FILTER product.price >= ${priceMin} && product.price <= ${priceMax}`;
   }
   return query;
 };
 
 const searchAnalizerQuery = (searched: string) => (searched ? ` SEARCH ANALYZER(
-  BOOST(p.name IN TOKENS('${searched}', 'text_en'), 5) ||
+  BOOST(product.name IN TOKENS('${searched}', 'text_en'), 5) ||
     product.description IN TOKENS('${searched}', 'text_en'), 'text_en')` : '');
 
 const getAll = async (searched: string, categories: string[], priceMin: number, priceMax: number, sort: Sort)

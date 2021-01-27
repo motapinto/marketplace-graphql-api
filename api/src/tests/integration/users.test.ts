@@ -4,56 +4,85 @@ import { dropDB, populate } from '../../database/populate';
 import server from './lazyServer';
 
 describe('Users integration tests', async () => {
-  const { query, mutate } = await server.value;
+  const { query } = await server.value;
   const dbName = 'users_test';
+  const commonArgs = `
+    _key
+    name
+    phone
+    email
+    birthday
+    address
+    photo {
+      dataLocation
+    }
+    banner {
+      dataLocation
+    }
+  `
+  const producerArgs = `
+    products {
+      _key
+      name
+      description
+      price
+      stock
+      images {
+        dataLocation
+      }
+      reviews {
+        comment
+        rating
+        date
+      }
+    }
+  `
+  const buyerArgs = `
+    points
+    orders {
+      _key
+      product { _key }
+      buyer { _key }
+      price
+      units
+      date
+      eta
+      inProgress
+    }
+    reviews {
+      comment
+      rating
+      date
+    }
+    categories {
+      name
+    }
+  `
 
   before(async () => {
     await populate(dbName);
   });
 
-  it('should add a user', async () => {
-    const ADD_USER = gql`
-      mutation {
-        addUser(user: {
-          _key: "27",
-          name: "James"
-        }) {
-          _key
-          name
+  it('should get all users', async () => {  
+    const GET_USERS = gql`
+      query {
+        users {
+          ... on ProducerType {
+            ${commonArgs}
+            ${producerArgs}
+          }
+
+          ... on BuyerType {
+            ${commonArgs}
+            ${buyerArgs}
+          }
         }
       }
     `;
 
-    const res = await mutate({ mutation: ADD_USER });
-    expect(res.data.addUser).to.eql({ _key: '27', name: 'James' });
-  });
 
-  it('should edit a user', async () => {
-    const EDIT_USER = gql`
-      mutation {
-        editUser(user: {_key: "27", name: "Paulo"}) {
-          _key
-          name
-        }
-      }
-    `;
-
-    const res = await mutate({ mutation: EDIT_USER });
-    expect(res.data.editUser).to.eql({ _key: '27', name: 'Paulo' });
-  });
-
-  it('should delete a user', async () => {
-    const DELETE_USER = gql`
-      mutation {
-        removeUser(key: "27") {
-          _key
-          name
-        }
-      }
-    `;
-
-    const res = await mutate({ mutation: DELETE_USER });
-    expect(res.data.removeUser).to.eql({ _key: '27', name: 'Paulo' });
+    const res = await query({ query: GET_USERS });
+    expect(res.data.users.length).to.eql(5);
   });
 
   after(async () => {
