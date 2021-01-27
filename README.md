@@ -1,6 +1,6 @@
 GraphQL schema
 =============
-You can check our GraphQL API schema documentation [here](#)!
+You can check our GraphQL API schema documentation [here](https://motapinto.github.io/marketplace-graphql-api/api/doc/)!
 
 Usage examples
 ==============
@@ -35,7 +35,7 @@ Usage examples
 ### Products
 [Back](#Usage-examples)
 #### Get Product by key
-```
+```gql
   query {
     product(_key: "11512") {
       name,
@@ -44,7 +44,7 @@ Usage examples
 ``` 
 
 #### Get Products 
-```
+```gql
   query {
     products {
       name,
@@ -53,7 +53,7 @@ Usage examples
 ```
 
 #### Get Products by search (all params are optional)
-```
+```gql
   query {
     products(query: "chicken", categories: ["honey"], priceMin: 0, priceMax: 10, sort: SORT.PRICE_LOW_HIGH) {
       _key
@@ -83,7 +83,7 @@ Usage examples
 ```
 
 #### Add Product
-```
+```gql
   mutation {
     addProduct(
       product: {
@@ -126,7 +126,7 @@ Usage examples
 ```
 
 #### Update Product
-```
+```gql
   mutation {
     updateProduct(
       product: {
@@ -169,7 +169,7 @@ Usage examples
 ```
 
 #### Remove Product
-```
+```gql
   mutation {
     removeProduct(_key: "111") {
         _key
@@ -201,7 +201,7 @@ Usage examples
 ### User
 [Back](#Usage-examples)
 #### Get User by key
-```
+```gql
   query {
     user(key: "11512") {
       name
@@ -209,7 +209,7 @@ Usage examples
   }
 ``` 
 #### Get User by name
-```
+```gql
   query {
     key(key: "111") {
       name
@@ -219,7 +219,7 @@ Usage examples
 
 ### Producer
 #### Get Producer by key
-```
+```gql
   query {
     producer(key: "11512") {
       name
@@ -230,7 +230,7 @@ Usage examples
 ### Review 
 [Back](#Usage-examples)
 #### Get Review by key
-```
+```gql
   query {
     review(_key: "1") {
       _key
@@ -245,7 +245,7 @@ Usage examples
 ``` 
 
 #### Get Reviews
-```
+```gql
   query {
     reviews {
       _key
@@ -260,7 +260,7 @@ Usage examples
 ``` 
 
 #### Add Review
-```
+```gql
   mutation {
     addReview(
       review: {
@@ -285,7 +285,7 @@ Usage examples
 ``` 
 
 #### Update Review
-```
+```gql
   mutation {
     updateReview(
       review: {
@@ -307,7 +307,7 @@ Usage examples
 ``` 
 
 #### Remove Review
-```
+```gql
   mutation {
     removeReview(_key: "111") {
       _key
@@ -324,7 +324,7 @@ Usage examples
 ### Categories
 [Back](#Usage-examples)
 #### Get Categories
-```
+```gql
   query {
     categories {
       _key,
@@ -334,7 +334,7 @@ Usage examples
 ```
 
 #### Get Category by key
-```
+```gql
   query {
     category(_key: "1") {
       _key
@@ -344,7 +344,7 @@ Usage examples
 ```
 
 #### Add Categories
-```
+```gql
   mutation {
     addCategory(category:{name:"Meat"}) {
       _key
@@ -354,7 +354,7 @@ Usage examples
 ```
 
 #### Update Categories
-```
+```gql
   mutation {
     updateCategory(category:{_key: "1", name: "Honey"}) {
       _key
@@ -364,7 +364,7 @@ Usage examples
 ```
 
 #### Remove Categories
-```
+```gql
   mutation {
     removeCategory(_key: "1") {
       _key
@@ -376,7 +376,7 @@ Usage examples
 ### Sorts
 [Back](#Usage-examples)
 #### Get Sorts
-```
+```gql
   query {
     sorts {
       name
