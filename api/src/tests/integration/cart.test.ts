@@ -40,7 +40,7 @@ describe('Carts integration tests', async () => {
     const ADD_ITEM_TO_CART = gql`
     mutation{
         addItemToCart(cartItem:{userKey:"4670", quantity:100, product:
-            { 
+            {
                 _key: "112",
                 name: "Honey 2.0",
                 price: 7.5,
@@ -78,7 +78,7 @@ describe('Carts integration tests', async () => {
     const ADD_ITEM_TO_CART = gql`
     mutation{
       addItemToCart(cartItem:{userKey:"4670", quantity:100, product:
-          { 
+          {
               _key: "111",
               name: "Honey 1.0",
               price: 2.5,
@@ -194,7 +194,7 @@ describe('Carts integration tests', async () => {
     const ADD_ITEM_TO_CART = gql`
     mutation{
         addItemToCart(cartItem:{userKey:"4670", quantity:1, product:
-            { 
+            {
                 _key: "113",
                 name: "Honey 1.0",
                 price:2.5,
@@ -245,7 +245,7 @@ describe('Carts integration tests', async () => {
         list: [{ product: { _key: '112' }, quantity: 100 }],
       },
     );
-  });*/
+  }); */
 
   after(async () => {
     await dropDB(dbName);

@@ -14,7 +14,7 @@ describe('Reviews integration tests', async () => {
     comment
     rating
     date
-  `
+  `;
 
   before(async () => {
     await populate(dbName);

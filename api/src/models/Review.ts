@@ -15,22 +15,25 @@ interface ArangoReview {
   date: string
 }
 
-const parseArangoReview = (val: ArangoReview) : ReviewType => {  
-  const { _rev, _id, _from, _to, ...data} = val;
+const parseArangoReview = (val: ArangoReview) : ReviewType => {
+  const { // eslint-disable-next-line @typescript-eslint/naming-convention
+    _rev, _id, _from, _to, ...data
+  } = val;
 
   return Object.assign(data, {
-    buyerKey: val._from.substring('buyers/'.length), 
-    productKey: val._to.substring('products/'.length), 
+    buyerKey: val._from.substring('buyers/'.length),
+    productKey: val._to.substring('products/'.length),
   });
 };
 
 const parseApolloReview = (val: AddReviewInput) : Partial<ArangoReview> => {
-  const { buyerKey, productKey, ...data} = val;
+  const { buyerKey, productKey, ...data } = val;
 
   return Object.assign(data, {
-    _from: `buyers/${val.buyerKey}`, 
-    _to: `products/${val.productKey}`, 
-    date: new Date().toLocaleString()});
+    _from: `buyers/${val.buyerKey}`,
+    _to: `products/${val.productKey}`,
+    date: new Date().toLocaleString(),
+  });
 };
 
 const getAll = async () => {

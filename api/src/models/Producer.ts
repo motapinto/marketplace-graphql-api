@@ -24,6 +24,9 @@ const get = async (key: string): Promise<ProducerType> => {
 const getFromProduct = async (productKey: string)
 : Promise<ProductType> => db.inEdges(`products/${productKey}`, 'producers');
 
+const getProducts = async (producerKey: string)
+: Promise<Array<ProductType>> => db.outEdges('produced_by', `producers/${producerKey}`);
+
 const add = async (newProducer: AddProducerInput) : Promise<ProducerType> => {
   const newDoc = await db.createDocument('producers', Object.assign(newProducer, {
     name: newProducer.name,
@@ -57,15 +60,12 @@ const update = async (updatedProducer: UpdateProducerInput): Promise<ProducerTyp
   return updatedDoc.new;
 };
 
-const getProducts = async (producerKey: string)
-: Promise<Array<ProductType>> => db.outEdges('produced_by', `producers/${producerKey}`);
-
 export = {
   getAll,
   get,
   getFromProduct,
+  getProducts,
   add,
   remove,
   update,
-  getProducts,
 };

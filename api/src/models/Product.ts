@@ -19,18 +19,15 @@ const getSortQuery = (sort: Sort, search: string = undefined) => {
     case Sort.PRICE_LOW_HIGH: default:
       query += 'product.price ASC';
       return query;
-    
+
     case Sort.RATING:
-      const productsRating = `
+      return `
         LET rating = AVERAGE(
           FOR review IN reviews
           FILTER review._to == product._id
           RETURN review.rating
         )
-      `;
-      
-      query += 'rating DESC';
-      return productsRating + query;
+      ${query} rating DESC`;
   }
 };
 

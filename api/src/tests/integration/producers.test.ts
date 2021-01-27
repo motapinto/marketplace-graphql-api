@@ -63,7 +63,7 @@ describe('Producers integration tests', async () => {
       }
     `;
 
-    const res = await query({ query: GET_PRODUCER });    
+    const res = await query({ query: GET_PRODUCER });
     expect(res.data.producer.name).to.eql('Sophie Austin');
     expect(res.data.producer.products.length).to.eql(3);
   });

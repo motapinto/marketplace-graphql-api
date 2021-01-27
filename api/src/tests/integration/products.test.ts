@@ -1,10 +1,11 @@
 import { gql } from 'apollo-server-express';
 import { dropDB, populate } from '../../database/populate';
-import ProductType from '../../graphql/types/ProductType';
 import server from './lazyServer';
-var chai = require("chai"),
-expect = chai.expect; 
-chai.use(require("chai-sorted"));
+
+const chai = require('chai');
+
+const { expect } = chai;
+chai.use(require('chai-sorted'));
 
 describe('Products integration tests', async () => {
   const { query, mutate } = await server.value;
@@ -21,7 +22,7 @@ describe('Products integration tests', async () => {
     categories{name},     
     reviews {_key}
     rating
-  `
+  `;
 
   before(async () => {
     await populate(dbName);
@@ -117,8 +118,8 @@ describe('Products integration tests', async () => {
       }
     `;
 
-    const res = await query({ query: GET_PRODUCTS });    
-    expect(res.data.products).to.be.sortedBy("rating", { descending: true });
+    const res = await query({ query: GET_PRODUCTS });
+    expect(res.data.products).to.be.sortedBy('rating', { descending: true });
   });
 
   it('should get all products and sort them by lowest price', async () => {
@@ -130,8 +131,8 @@ describe('Products integration tests', async () => {
       }
     `;
 
-    const res = await query({ query: GET_PRODUCTS });    
-    expect(res.data.products).to.be.sortedBy("price", { descending: false });
+    const res = await query({ query: GET_PRODUCTS });
+    expect(res.data.products).to.be.sortedBy('price', { descending: false });
   });
 
   it('should get all products and sort them by highest price', async () => {
@@ -143,8 +144,8 @@ describe('Products integration tests', async () => {
       }
     `;
 
-    const res = await query({ query: GET_PRODUCTS });    
-    expect(res.data.products).to.be.sortedBy("price", { descending: true });
+    const res = await query({ query: GET_PRODUCTS });
+    expect(res.data.products).to.be.sortedBy('price', { descending: true });
   });
 
   it('should get all products and sort them by most recent', async () => {
@@ -156,8 +157,8 @@ describe('Products integration tests', async () => {
       }
     `;
 
-    const res = await query({ query: GET_PRODUCTS });    
-    expect(res.data.products).to.be.sortedBy("publishedAt", { descending: true });
+    const res = await query({ query: GET_PRODUCTS });
+    expect(res.data.products).to.be.sortedBy('publishedAt', { descending: true });
   });
 
   it('should filter products by search query', async () => {

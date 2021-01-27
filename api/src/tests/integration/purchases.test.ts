@@ -10,7 +10,7 @@ describe('Purchases integration tests', async () => {
   before(async () => {
     await populate(dbName);
   });
-/*
+  /*
   it('purchase an order', async () => {
     const PURCHASE_ORDER = gql`
       mutation{

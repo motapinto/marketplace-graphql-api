@@ -53,7 +53,7 @@ describe('Buyers integration tests', async () => {
       }
     `;
 
-    const res = await query({ query: GET_BUYERS });    
+    const res = await query({ query: GET_BUYERS });
     expect(res.data.buyers.length).to.eql(2);
   });
 
@@ -68,7 +68,7 @@ describe('Buyers integration tests', async () => {
 
     const res = await query({ query: GET_BUYER });
     expect(res.data.buyer.name).to.eql('Martim Pinto da Silva');
-    expect(res.data.buyer.categories).to.eql([{ name: 'honey'}, { name: 'cookies' }]);
+    expect(res.data.buyer.categories).to.eql([{ name: 'honey' }, { name: 'cookies' }]);
   });
 
   it('should add a buyers', async () => {

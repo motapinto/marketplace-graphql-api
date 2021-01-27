@@ -1,0 +1,32 @@
+version: "3"
+services:
+  api:
+    image: api
+    build:
+      context: ./api
+    ports:
+      - 5000:5000
+    volumes:
+      - ./api:/api
+      - ./api/node_modules:/api/node_modules
+      - ./api/doc/:/api/doc/
+    depends_on:
+      - arangodb
+    environment:
+      DATABASE_NAME: "realfarmville"
+      DATABASE_USER: "root"
+      DATABASE_PASS: "rootpassword"
+      DATABASE_URL: "http://arangodb:8529"
+    command: npm run prod:ci
+  arangodb:
+    image: arangodb:latest
+    ports:
+      - 8529:8529
+    volumes:
+      - arangodb_data_container:/var/lib/arangodb3
+      - arangodb_apps_data_container:/var/lib/arangodb3-apps
+    environment:
+      ARANGO_ROOT_PASSWORD: rootpassword
+volumes:
+  arangodb_data_container:
+  arangodb_apps_data_container:

@@ -252,7 +252,6 @@ const outEdges = async (colName: string, from: string): Promise<any> => {
       OUTBOUND '${from}' ${colName}
       RETURN v
     `);
-    
 
     return await cursor.all();
   } catch (error) {

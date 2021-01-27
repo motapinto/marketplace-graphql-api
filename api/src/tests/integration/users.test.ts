@@ -19,7 +19,7 @@ describe('Users integration tests', async () => {
     banner {
       dataLocation
     }
-  `
+  `;
   const producerArgs = `
     products {
       _key
@@ -36,7 +36,7 @@ describe('Users integration tests', async () => {
         date
       }
     }
-  `
+  `;
   const buyerArgs = `
     points
     orders {
@@ -57,13 +57,13 @@ describe('Users integration tests', async () => {
     categories {
       name
     }
-  `
+  `;
 
   before(async () => {
     await populate(dbName);
   });
 
-  it('should get all users', async () => {  
+  it('should get all users', async () => {
     const GET_USERS = gql`
       query {
         users {
@@ -79,7 +79,6 @@ describe('Users integration tests', async () => {
         }
       }
     `;
-
 
     const res = await query({ query: GET_USERS });
     expect(res.data.users.length).to.eql(5);

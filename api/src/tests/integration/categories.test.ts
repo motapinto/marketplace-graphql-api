@@ -24,7 +24,7 @@ describe('Categories integration tests', async () => {
       }
     `;
 
-    const res = await query({ query: GET_CATEGORIES });    
+    const res = await query({ query: GET_CATEGORIES });
     expect(res.data.categories.length).to.eql(9);
   });
 
