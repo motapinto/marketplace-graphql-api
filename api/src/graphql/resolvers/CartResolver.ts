@@ -4,30 +4,22 @@ import {
   Arg as arg,
   Query as query,
   Mutation as mutation,
+  FieldResolver as fieldResolver,
+  Root as root,
 } from 'type-graphql';
 import CartType from '../types/CartType';
-import CartModel from '../../models/Cart';
-import { CartItem, ReduceCartItem } from '../inputs/CartInput';
+import Cart from '../../models/Cart';
+import CartProductInput from '../inputs/CartInput';
 
 @resolver(() => CartType)
 export default class CartResolver {
-  @query(() => CartType, { nullable: true })
-  async getCartByUser(@arg('key') key: string) {
-    return CartModel.getCartByUserKey(key);
+  @fieldResolver()
+  async price(@root() cart: CartType) {
+    return cart.list.reduce((prev, cur) => prev + (cur.product.price * cur.quantity), 0);
   }
 
   @mutation(() => CartType)
-  async addItemToCart(@arg('cartItem') cartItem: CartItem) {
-    return CartModel.addItemToCart(cartItem);
-  }
-
-  @mutation(() => CartType)
-  async decreaseItemQuantity(@arg('cartInfo') cartInfo:ReduceCartItem) {
-    return CartModel.decreaseItemQuantity(cartInfo);
-  }
-
-  @mutation(() => CartType, { nullable: true })
-  async removeItemFromCart(@arg('cartInfo') cartInfo:ReduceCartItem) {
-    return CartModel.removeItemFromCart(cartInfo);
+  async updateCart(@arg('cart') cart: CartProductInput) {
+    return Cart.update(cart);
   }
 }

@@ -1,16 +1,25 @@
+/* eslint-disable import/no-cycle */
 import 'reflect-metadata';
-import { ObjectType as objectType, Field as field } from 'type-graphql';
-import UserType from './UserType';
-import ProductInCart from './ProductInCart';
+import { ObjectType as objectType, Field as field, Float as float } from 'type-graphql';
+import ProductType from './ProductType';
 
 @objectType()
-export default class Cart {
+export class CartProductType {
   @field()
   readonly _key: string;
 
-  @field({ nullable: true })
-  user: UserType;
+  @field()
+  product: ProductType;
 
-  @field(() => [ProductInCart], { nullable: true })
-  list:ProductInCart[];
+  @field()
+  quantity: number;
+}
+
+@objectType()
+export default class CartType {
+  @field(() => [CartProductType])
+  list: CartProductType[] = [];
+
+  @field(() => float)
+  price: number;
 }

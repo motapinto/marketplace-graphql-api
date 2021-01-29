@@ -19,8 +19,8 @@ import addProducers from './populate/producers';
 import addSorts from './populate/sorts';
 import addCategories from './populate/categories';
 import addReviews from './populate/reviews';
+import addCarts from './populate/carts';
 // import addOrders from './populate/orders';
-// import addCarts from './populate/carts';
 // const entity = '20658';
 
 interface ArangoDB {
@@ -91,7 +91,7 @@ export const populate = async (dbName: string = process.env.DATABASE_PASS || 're
   }
 
   await addReviews();
-  // await addCarts();
+  await addCarts();
   // await addOrders();
 
   return db;

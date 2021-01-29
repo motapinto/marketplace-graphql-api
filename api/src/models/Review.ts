@@ -81,13 +81,13 @@ const add = async (review: AddReviewInput) => {
 };
 
 const remove = async (key: string) => {
-  const removedDoc = await database.removeDocument('reviews', key, { returnOld: true });
-  return parseArangoReview(removedDoc.old);
+  const oldDoc = await database.removeDocument('reviews', key, { returnOld: true });
+  return parseArangoReview(oldDoc.old);
 };
 
 const update = async (updated: UpdateReviewInput) => {
-  const old = await database.getDocument('reviews', updated._key);
-  const updatedDoc = await database.replaceDocument('reviews', Object.assign(old, updated), { returnNew: true });
+  const oldDoc = await database.getDocument('reviews', updated._key);
+  const updatedDoc = await database.replaceDocument('reviews', Object.assign(oldDoc, updated), { returnNew: true });
   return parseArangoReview(updatedDoc.new);
 };
 

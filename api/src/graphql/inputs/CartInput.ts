@@ -1,24 +1,27 @@
 import 'reflect-metadata';
-import { InputType as inputType, Field as field } from 'type-graphql';
-import { CartProductInput } from './ProductInput';
+import {
+  InputType as inputType,
+  Field as field,
+} from 'type-graphql';
+import {
+  IsNotEmpty as isNotEmpty,
+  Min as min,
+} from 'class-validator';
 
 @inputType()
-export class CartItem {
-  @field()
-  userKey:string;
-
-  @field(() => CartProductInput)
-  product:CartProductInput;
+export default class CartProductInput {
+  @field({ nullable: true })
+  readonly _key?: string;
 
   @field()
-  quantity:number;
-}
-
-@inputType()
-export class ReduceCartItem {
-  @field()
-  userKey:string;
+  @isNotEmpty()
+  productKey: string;
 
   @field()
-  product:string;
+  @isNotEmpty()
+  buyerKey: string;
+
+  @field()
+  @min(0)
+  quantity: number;
 }

@@ -13,6 +13,7 @@ import Buyer from '../../models/Buyer';
 import Order from '../../models/Order';
 import Review from '../../models/Review';
 import Category from '../../models/Category';
+import Cart from '../../models/Cart';
 import { AddBuyerInput, UpdateBuyerInput } from '../inputs/BuyerInput';
 
 @resolver(() => BuyerType)
@@ -25,6 +26,11 @@ export default class BuyerResolver extends UserResolver {
   @fieldResolver()
   async reviews(@root() buyer: BuyerType) {
     return Review.getFromBuyer(buyer._key);
+  }
+
+  @fieldResolver()
+  async cart(@root() buyer: BuyerType) {
+    return Cart.getFromBuyer(buyer._key);
   }
 
   @fieldResolver()

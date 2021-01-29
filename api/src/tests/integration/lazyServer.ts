@@ -9,8 +9,8 @@ import ProductResolver from '../../graphql/resolvers/ProductResolver';
 import CategoryResolver from '../../graphql/resolvers/CategoryResolver';
 import ReviewResolver from '../../graphql/resolvers/ReviewResolver';
 import ProductSortResolver from '../../graphql/args/ProductSort';
+import CartResolver from '../../graphql/resolvers/CartResolver';
 // import OrderResolver from './graphql/resolvers/OrderResolver';
-// import CartResolver from './graphql/resolvers/CartResolver';
 // import PurchasesResolver from './graphql/resolvers/PurchasesResolver';
 
 async function buildServer() {
@@ -23,8 +23,8 @@ async function buildServer() {
       CategoryResolver,
       ReviewResolver,
       ProductSortResolver,
+      CartResolver,
       // OrderResolver,
-      // CartResolver,
       // PurchasesResolver,
     ],
   });

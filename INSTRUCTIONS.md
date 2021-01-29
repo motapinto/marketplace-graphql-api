@@ -22,3 +22,5 @@ Steps to reproduce tests:
 1. Run arangodb (docker-compose up -d arangodb)
 2. Build api (npm run build in /api/)
 3. Run tests (npm run test /api/)
+
+**Disclaimer**: This API does not have extensive validation and was developed as a learning project
