@@ -100,6 +100,16 @@
                 BuyerType
             </a>
         </li>
+        <li  title="CartProductType">
+            <a href="cartproducttype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CartProductType
+            </a>
+        </li>
+        <li  title="CartType">
+            <a href="carttype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CartType
+            </a>
+        </li>
         <li  title="CategoryType">
             <a href="categorytype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
                 CategoryType
@@ -190,6 +200,11 @@
                 AddCategoryInput
             </a>
         </li>
+        <li  title="AddOrderInput">
+            <a href="addorderinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AddOrderInput
+            </a>
+        </li>
         <li  title="AddProducerInput">
             <a href="addproducerinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
                 AddProducerInput
@@ -203,6 +218,11 @@
         <li  title="AddReviewInput">
             <a href="addreviewinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
                 AddReviewInput
+            </a>
+        </li>
+        <li  title="CartProductInput">
+            <a href="cartproductinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CartProductInput
             </a>
         </li>
         <li  title="ImageInput">
@@ -293,7 +313,7 @@
             </a>
             GraphQL Schema definition
         </h2>
-        <code class="highlight"><ul class="code" style="padding-left:42px"><li><span class="keyword operator ts">type</span> <span class="identifier">OrderType</span> {</li><li></li><li><span class="tab"><span class="meta">_key</span>: <a class="support type" href="string.doc.html">String</a>! </span></li><li></li><li><span class="tab"><span class="meta">product</span>: <a class="support type" href="producttype.doc.html">ProductType</a>! </span></li><li></li><li><span class="tab"><span class="meta">buyer</span>: <a class="support type" href="buyertype.doc.html">BuyerType</a>! </span></li><li></li><li><span class="tab"><span class="meta">price</span>: <a class="support type" href="float.doc.html">Float</a>! </span></li><li></li><li><span class="tab"><span class="meta">units</span>: <a class="support type" href="int.doc.html">Int</a>! </span></li><li></li><li><span class="tab"><span class="meta">date</span>: <a class="support type" href="string.doc.html">String</a> </span></li><li></li><li><span class="tab"><span class="meta">eta</span>: <a class="support type" href="string.doc.html">String</a> </span></li><li></li><li><span class="tab"><span class="meta">inProgress</span>: <a class="support type" href="boolean.doc.html">Boolean</a>! </span></li><li>}</li></ul></code>
+        <code class="highlight"><ul class="code" style="padding-left:42px"><li><span class="keyword operator ts">type</span> <span class="identifier">OrderType</span> {</li><li></li><li><span class="tab"><span class="meta">_key</span>: <a class="support type" href="string.doc.html">String</a>! </span></li><li></li><li><span class="tab"><span class="meta">product</span>: <a class="support type" href="producttype.doc.html">ProductType</a>! </span></li><li></li><li><span class="tab"><span class="meta">quantity</span>: <a class="support type" href="int.doc.html">Int</a>! </span></li><li></li><li><span class="tab"><span class="meta">date</span>: <a class="support type" href="string.doc.html">String</a>! </span></li><li></li><li><span class="tab"><span class="meta">price</span>: <a class="support type" href="float.doc.html">Float</a>! </span></li><li>}</li></ul></code>
     </div>
 </section>
 <section>
@@ -304,7 +324,7 @@
             </a>
             Require by
         </h2>
-        <ul class="require-by"><li><a href="buyertype.doc.html" title="BuyerType - ">BuyerType<em>null</em></a><li></ul>
+        <ul class="require-by"><li><a href="buyertype.doc.html" title="BuyerType - ">BuyerType<em>null</em></a><li><li><a href="mutation.doc.html" title="Mutation - ">Mutation<em>null</em></a><li></ul>
     </div>
 </section>
 <footer>
