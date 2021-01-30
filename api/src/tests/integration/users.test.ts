@@ -42,12 +42,9 @@ describe('Users integration tests', async () => {
     orders {
       _key
       product { _key }
-      buyer { _key }
       price
-      units
+      quantity
       date
-      eta
-      inProgress
     }
     reviews {
       comment

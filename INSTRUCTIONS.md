@@ -1,8 +1,4 @@
 # API usage instructions
-
-## Documentation
-Visit the API schema [here](https://motapinto.github.io/marketplace-graphql-api/api/doc/)!
-
 ## Info
 To edit the database configuration have a .env file in /api/.env with the following structure:
 >  DATABASE_NAME=realfarmville\
@@ -14,7 +10,7 @@ To edit the database configuration have a .env file in /api/.env with the follow
 
 ## How to use
 * Run arangodb
-  * docker-compose up -d arangodb 
+  * docker-compose up -d arangodb (anywhere in the project)
   * npm run populate (to populate the DB)
   * Visit http://localhost:8529 and enter credentials (optional)
 * Run API
@@ -24,6 +20,7 @@ To edit the database configuration have a .env file in /api/.env with the follow
 ## Testing
 Steps to reproduce tests:
 1. Run arangodb (docker-compose up -d arangodb)
-2. Run tests (npm run test:dev in /api/)
+2. Build api (npm run build in /api/)
+3. Run tests (npm run test /api/)
 
 **Disclaimer**: This API does not have extensive validation and was developed as a learning project

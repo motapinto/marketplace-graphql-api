@@ -86,17 +86,3 @@ export class UpdateProductInput implements Partial<ProductType> {
   @arrayNotEmpty()
   categories?: UpdateCategoryInput[];
 }
-
-@inputType()
-export class CartProductInput implements Partial<ProductType> {
-  @field()
-  readonly _key: string;
-
-  @field()
-  @length(0, 20)
-  name: string;
-
-  @field(() => float)
-  @min(0)
-  price: number;
-}

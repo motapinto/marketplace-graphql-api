@@ -63,13 +63,9 @@ const addCollections = async () => Promise.all([
   await openCollection('sorts', CollectionType.DOCUMENT_COLLECTION),
   await openCollection('images', CollectionType.DOCUMENT_COLLECTION),
   await openCollection('locations', CollectionType.DOCUMENT_COLLECTION),
-
   await openCollection('buyers', CollectionType.DOCUMENT_COLLECTION),
   await openCollection('producers', CollectionType.DOCUMENT_COLLECTION),
-
   await openCollection('products', CollectionType.DOCUMENT_COLLECTION),
-  await openCollection('carts', CollectionType.DOCUMENT_COLLECTION),
-  await openCollection('orders', CollectionType.DOCUMENT_COLLECTION),
 ]);
 
 const addViews = async () => openView('products_view');
@@ -78,9 +74,9 @@ const addEdges = async () => Promise.all([
   await openCollection('products_categories', CollectionType.EDGE_COLLECTION),
   await openCollection('buyers_categories', CollectionType.EDGE_COLLECTION),
   await openCollection('reviews', CollectionType.EDGE_COLLECTION),
-  await openCollection('ordered_by', CollectionType.EDGE_COLLECTION),
   await openCollection('produced_by', CollectionType.EDGE_COLLECTION),
-  await openCollection('ordered_product', CollectionType.EDGE_COLLECTION),
+  await openCollection('in_buyer_cart', CollectionType.EDGE_COLLECTION),
+  await openCollection('product_order', CollectionType.EDGE_COLLECTION),
 ]);
 
 const createIndex = async (colName: string, index: any): Promise<any> => {
@@ -259,6 +255,21 @@ const outEdges = async (colName: string, from: string): Promise<any> => {
   }
 };
 
+// Get Documents and Edges connected to {colName} edge collection from {from} document collections
+const outEdges2 = async (colName: string, from: string): Promise<any> => {
+  try {
+    const cursor = await query(`
+      FOR v, e IN 1..1 
+      OUTBOUND '${from}' ${colName}
+      RETURN {v, e}
+    `);
+
+    return await cursor.all();
+  } catch (error) {
+    console.error(`Unable to execute outEdges in collection ${colName}. Error: ${error.message}`); // eslint-disable-line
+  }
+};
+
 export = {
   initialize,
   openCollection,
@@ -274,4 +285,5 @@ export = {
   removeByExample,
   inEdges,
   outEdges,
+  outEdges2,
 };

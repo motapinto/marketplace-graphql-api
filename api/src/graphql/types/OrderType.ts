@@ -17,21 +17,12 @@ export default class OrderType {
   @field(() => ProductType)
   product: ProductType;
 
-  @field(() => BuyerType)
-  buyer: BuyerType;
+  @field(() => int)
+  quantity: number;
+
+  @field()
+  date: string;
 
   @field(() => float)
   price: number;
-
-  @field(() => int)
-  units: number;
-
-  @field({ defaultValue: new Date().toLocaleString() })
-  date: string;
-
-  @field({ nullable: true })
-  eta?: string;
-
-  @field()
-  inProgress: boolean;
 }

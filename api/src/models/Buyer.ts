@@ -42,7 +42,7 @@ const remove = async (key: string): Promise<BuyerType> => {
   await Promise.all([
     db.removeByExample('buyers_categories', '_from', `buyers/${key}`),
     db.removeByExample('reviews', '_from', `buyers/${key}`),
-    db.removeByExample('ordered_by', '_to', `products/${key}`),
+    db.removeByExample('product_order', '_from', `buyers/${key}`),
   ]);
 
   const oldDoc = await db.removeDocument('buyers', key, { returnOld: true });
