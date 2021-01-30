@@ -18,7 +18,7 @@ export default class CartResolver {
     return cart.list.reduce((prev, cur) => prev + (cur.product.price * cur.quantity), 0);
   }
 
-  @mutation(() => CartType)
+  @mutation(() => CartType, { nullable: true })
   async updateCart(@arg('cart') cart: CartProductInput) {
     return Cart.update(cart);
   }

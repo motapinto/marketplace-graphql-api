@@ -20,10 +20,6 @@ const get = async (key: string): Promise<BuyerType> => {
   return cursor.next();
 };
 
-const getFromCartProduct = async (key: string) => db.inEdges(
-  'in_buyer_cart', `products/${key}`,
-);
-
 const add = async (newBuyer: AddBuyerInput): Promise<BuyerType> => {
   const newDoc = await db.createDocument('buyers', Object.assign(newBuyer, {
     name: newBuyer.name,
@@ -46,7 +42,7 @@ const remove = async (key: string): Promise<BuyerType> => {
   await Promise.all([
     db.removeByExample('buyers_categories', '_from', `buyers/${key}`),
     db.removeByExample('reviews', '_from', `buyers/${key}`),
-    db.removeByExample('ordered_by', '_to', `products/${key}`),
+    db.removeByExample('product_order', '_from', `buyers/${key}`),
   ]);
 
   const oldDoc = await db.removeDocument('buyers', key, { returnOld: true });
@@ -67,7 +63,6 @@ const update = async (updatedBuyer: UpdateBuyerInput): Promise<BuyerType> => {
 export = {
   getAll,
   get,
-  getFromCartProduct,
   add,
   remove,
   update,

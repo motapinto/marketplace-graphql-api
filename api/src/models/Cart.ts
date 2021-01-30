@@ -4,13 +4,13 @@ import CartType from '../graphql/types/CartType';
 import ProductType from '../graphql/types/ProductType';
 
 interface ArangoGetBuyerCart {
-  v: ProductType,
+  v: ProductType
   e: {
-    _key: string,
-    _id: string,
-    _rev: string,
-    _from: string,
-    _to: string,
+    _key: string
+    _id: string
+    _rev: string
+    _from: string
+    _to: string
     quantity: number
   }
 }

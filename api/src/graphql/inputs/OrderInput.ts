@@ -2,33 +2,24 @@ import 'reflect-metadata';
 import {
   InputType as inputType,
   Field as field,
-  Float as float,
   Int as int,
 } from 'type-graphql';
+import {
+  IsNotEmpty as isNotEmpty,
+  Min as min,
+} from 'class-validator';
 
 @inputType()
 export default class AddOrderInput {
   @field()
-  readonly _key: string;
+  @isNotEmpty()
+  productKey: string;
 
   @field()
-  readonly productKey: string;
-
-  @field()
-  readonly buyerKey: string;
-
-  @field(() => float)
-  price: number;
+  @isNotEmpty()
+  buyerKey: string;
 
   @field(() => int)
-  units: string;
-
-  @field()
-  date: string;
-
-  @field({ nullable: true })
-  eta?: string;
-
-  @field()
-  inProgress: boolean;
+  @min(1)
+  quantity: number;
 }

@@ -63,12 +63,9 @@ const addCollections = async () => Promise.all([
   await openCollection('sorts', CollectionType.DOCUMENT_COLLECTION),
   await openCollection('images', CollectionType.DOCUMENT_COLLECTION),
   await openCollection('locations', CollectionType.DOCUMENT_COLLECTION),
-
   await openCollection('buyers', CollectionType.DOCUMENT_COLLECTION),
   await openCollection('producers', CollectionType.DOCUMENT_COLLECTION),
-
   await openCollection('products', CollectionType.DOCUMENT_COLLECTION),
-  await openCollection('orders', CollectionType.DOCUMENT_COLLECTION),
 ]);
 
 const addViews = async () => openView('products_view');
@@ -79,9 +76,7 @@ const addEdges = async () => Promise.all([
   await openCollection('reviews', CollectionType.EDGE_COLLECTION),
   await openCollection('produced_by', CollectionType.EDGE_COLLECTION),
   await openCollection('in_buyer_cart', CollectionType.EDGE_COLLECTION),
-
-  await openCollection('ordered_by', CollectionType.EDGE_COLLECTION),
-  await openCollection('ordered_product', CollectionType.EDGE_COLLECTION),
+  await openCollection('product_order', CollectionType.EDGE_COLLECTION),
 ]);
 
 const createIndex = async (colName: string, index: any): Promise<any> => {

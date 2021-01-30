@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server-express';
+import { doesNotMatch } from 'assert';
 import { expect } from 'chai';
 import { dropDB, populate } from '../../database/populate';
 import server from './lazyServer';
@@ -22,13 +23,12 @@ describe('Buyers integration tests', async () => {
     points
     orders {
       _key
-      product { _key }
-      buyer { _key }
+      product {
+        _key
+      }
       price
-      units
+      quantity
       date
-      eta
-      inProgress
     }
     reviews {
       comment

@@ -10,9 +10,9 @@ import ProducerResolver from '../graphql/resolvers/ProducerResolver';
 import ProductSortResolver from '../graphql/args/ProductSort';
 import CategoryResolver from '../graphql/resolvers/CategoryResolver';
 import ReviewResolver from '../graphql/resolvers/ReviewResolver';
-/* import OrderResolver from '../graphql/resolvers/OrderResolver';
-  import CartResolver from '../graphql/resolvers/CartResolver';
-*/
+import OrderResolver from '../graphql/resolvers/OrderResolver';
+import CartResolver from '../graphql/resolvers/CartResolver';
+// populate
 import addProducts from './populate/products';
 import addBuyers from './populate/buyers';
 import addProducers from './populate/producers';
@@ -20,8 +20,7 @@ import addSorts from './populate/sorts';
 import addCategories from './populate/categories';
 import addReviews from './populate/reviews';
 import addCarts from './populate/carts';
-// import addOrders from './populate/orders';
-// const entity = '20658';
+import addOrders from './populate/orders';
 
 interface ArangoDB {
   dbURL: string
@@ -65,8 +64,8 @@ export const populate = async (dbName: string = process.env.DATABASE_PASS || 're
       ProductSortResolver,
       CategoryResolver,
       ReviewResolver,
-      // OrderResolver,
-      // CartResolver,
+      OrderResolver,
+      CartResolver,
     ],
   });
 
@@ -92,7 +91,7 @@ export const populate = async (dbName: string = process.env.DATABASE_PASS || 're
 
   await addReviews();
   await addCarts();
-  // await addOrders();
+  await addOrders();
 
   return db;
 };

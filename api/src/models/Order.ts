@@ -1,65 +1,71 @@
 import db from '../database/db';
-import OrderInput from '../graphql/inputs/OrderInput';
+import AddOrderInput from '../graphql/inputs/OrderInput';
 import OrderType from '../graphql/types/OrderType';
+import ProductType from '../graphql/types/ProductType';
+import Product from './Product';
 
-const add = async (orderInput: OrderInput, key: string = null) => {
-  const order = Object.assign(orderInput, {
-    price: orderInput.price,
-    units: orderInput.units,
-    date: orderInput.date,
-    eta: orderInput.eta,
-    inProgress: orderInput.inProgress,
-  });
+interface ArangoOrder {
+  _key: string
+  _from: string
+  _to: string
+  quantity: number
+  date: string
+}
 
-  if (key) Object.assign(order, { _key: key });
-  const orderModel = await db.createDocument('orders', order);
-  await db.createDocument('ordered_by', { _key: `ordered_by-${orderModel._key}-${orderInput.buyerKey}`, _from: `orders/${orderModel._key}`, _to: `buyer/${orderInput.buyerKey}` });
-  await db.createDocument('ordered_product', { _key: `ordered_product-${orderModel._key}-${orderInput.buyerKey}`, _from: `orders/${orderModel._key}`, _to: `products/${orderInput.productKey}` });
+interface ArangoGetOrder {
+  v: ProductType
+  e: {
+    _key: string
+    _id: string
+    _rev: string
+    _from: string
+    _to: string
+    quantity: number
+    date: string
+  }
+}
+
+const getFromBuyer = async (key: string): Promise<Array<Partial<OrderType>>> => {
+  const orderedProducts: ArangoGetOrder[] = await db.outEdges2('product_order', `buyers/${key}`);
+
+  return orderedProducts.map((product) => ({
+    _key: product.e._key,
+    product: product.v,
+    quantity: product.e.quantity,
+    date: product.e.date,
+  }));
 };
 
-const getFromBuyer = async (id: string) => {
-  const ordersCursor = await db.query(`
-        FOR orders IN 1..1 INBOUND "buyer/${id}" ordered_by
-        RETURN orders
-    `);
-
-  return ordersCursor.all();
+const getProduct = async (orderKey: string): Promise<ProductType> => {
+  const order: ArangoOrder = await db.getDocument('product_order', orderKey);
+  return Product.get(order._to.substring('products/'.length));
 };
 
-const getProduct = async (id: string) => {
-  const cursor = await db.query(`
-        FOR product IN 1..1 OUTBOUND "orders/${id}" ordered_product
-        LIMIT 1
-        RETURN product
-    `);
+const parseArangoOrder = async (arangoOrder: ArangoOrder): Promise<OrderType> => Object.assign(new OrderType(), {
+  _key: arangoOrder._key,
+  quantity: arangoOrder.quantity,
+  date: arangoOrder.date,
+});
 
-  return cursor.next();
+const add = async (newOrder: AddOrderInput): Promise<OrderType> => {
+  const newDoc = await db.createDocument('product_order', Object.assign(newOrder, {
+    _from: `buyers/${newOrder.buyerKey}`,
+    _to: `products/${newOrder.productKey}`,
+    date: new Date().toLocaleString(),
+    quantity: newOrder.quantity,
+  }), { returnNew: true });
+
+  return parseArangoOrder(newDoc.new);
 };
 
-const getProducts = async (id: string) => {
-  const cursor = await db.query(`
-        FOR product IN 1..1 OUTBOUND "orders/${id}" ordered_product
-        RETURN product
-    `);
-
-  return cursor.all();
-};
-
-const getByKey = async (id: string): Promise<OrderType> => {
-  const cursor = await db.query(`
-        FOR doc IN orders
-        FILTER doc._key == '${id}'
-        LIMIT 1
-        RETURN doc
-      `);
-
-  return cursor.next();
+const remove = async (key: string): Promise<OrderType> => {
+  const oldDoc = await db.removeDocument('product_order', key, { returnOld: true });
+  return oldDoc.old;
 };
 
 export = {
-  getByKey,
-  add,
   getFromBuyer,
   getProduct,
-  getProducts,
+  add,
+  remove,
 };

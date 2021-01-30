@@ -11,35 +11,39 @@ describe('Orders integration tests', async () => {
     await populate(dbName);
   });
 
-  it('should get the right order', async () => {
-    const GET_ORDER = gql`
-            query {
-                order(key: "1") {
-                        _key
-                        price
-                        units
-                    }
-                }
-            `;
+  it('should add an order', async () => {
+    const ADD_ORDER = gql`
+      mutation {
+        addOrder(order: { productKey: "111", buyerKey: "1", quantity: 3 }) {
+          _key
+          product {
+            name
+            price
+          }
+          quantity
+          date
+          price
+        }
+      }
+    `;
 
-    const response = await query({ query: GET_ORDER });
-    expect(response.data.order).to.eql({ _key: '1', price: 20, units: 2 });
+    const res = await mutate({ mutation: ADD_ORDER });
+    expect(res.data.addOrder.price).to.eql(7.5);
   });
 
-  it('should get the order\'s product', async () => {
-    const GET_ORDER_PRODUCT = gql`
-            query {
-                order(key: "1") {
-                        _key
-                        product {
-                            name
-                        }
-                    }
-                }
-            `;
+  it('should remove an order', async () => {
+    const REMOVE_ORDER = gql`
+      mutation {
+        removeOrder(key: "002") {
+          _key
+          quantity
+          date
+        }
+      }
+    `;
 
-    const response = await query({ query: GET_ORDER_PRODUCT });
-    expect(response.data.order).to.eql({ _key: '1', product: { name: 'Honey 1.0' } });
+    const res = await mutate({ mutation: REMOVE_ORDER });
+    expect(res.data.removeOrder.quantity).to.eql(12);
   });
 
   after(async () => {
