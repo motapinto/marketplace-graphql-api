@@ -33,13 +33,13 @@ import OrderResolver from './graphql/resolvers/OrderResolver';
     schema,
     playground: true,
   });
-
+  
   dotenv.config();
   await database.initialize({
     dbURL: process.env.DATABASE_URL || 'http://localhost:8529',
     dbUser: process.env.DATABASE_USER || 'root',
     dbPass: process.env.DATABASE_PASS || 'rootpassword',
-    dbName: process.env.DATABASE_NAME || 'realfarmville',
+    dbName: process.env.DATABASE_NAME || 'farmland',
   });
 
   const app = express();

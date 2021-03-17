@@ -34,10 +34,10 @@ const dbObj: ArangoDB = {
   dbURL: process.env.DATABASE_URL || 'http://localhost:8529',
   dbUser: process.env.DATABASE_USER || 'root',
   dbPass: process.env.DATABASE_PASS || 'rootpassword',
-  dbName: process.env.DATABASE_PASS || 'realfarmville',
+  dbName: process.env.DATABASE_NAME || 'farmland',
 };
 
-export const dropDB = async (dbName: string = process.env.DATABASE_PASS || 'realfarmville') => {
+export const dropDB = async (dbName: string = process.env.DATABASE_NAME || 'farmland') => {
   const systemDB = new Database({
     url: dbObj.dbURL,
     auth: {
@@ -45,7 +45,7 @@ export const dropDB = async (dbName: string = process.env.DATABASE_PASS || 'real
       password: dbObj.dbPass,
     },
   });
-
+  
   const names = await systemDB.listDatabases();
   if (names.indexOf(dbName) !== -1) {
     await systemDB.dropDatabase(dbName);
@@ -54,7 +54,7 @@ export const dropDB = async (dbName: string = process.env.DATABASE_PASS || 'real
   return systemDB;
 };
 
-export const populate = async (dbName: string = process.env.DATABASE_PASS || 'realfarmville') => {
+export const populate = async (dbName: string = process.env.DATABASE_NAME || 'farmland') => {
   await buildSchema({
     resolvers: [
       ProductResolver,
@@ -69,9 +69,10 @@ export const populate = async (dbName: string = process.env.DATABASE_PASS || 're
     ],
   });
 
+  
   dbObj.dbName = dbName;
   await dropDB(dbName);
-  const db = await database.initialize(dbObj);
+  const db = await database.initialize(dbObj);  
 
   await addSorts(db);
   await addCategories();
